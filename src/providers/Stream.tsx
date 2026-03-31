@@ -19,9 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LangGraphLogoSVG } from "@/components/icons/langgraph";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { ArrowRight } from "lucide-react";
-import { PasswordInput } from "@/components/ui/password-input";
 import { getApiKey } from "@/lib/api-key";
 import { useThreads } from "./Thread";
 import { toast } from "sonner";
@@ -159,7 +157,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   const [authScheme, setAuthScheme] = useQueryState("authScheme", {
     defaultValue: envAuthScheme || "",
   });
-  const [isAgentBuilder, setIsAgentBuilder] = useState(
+  const [isAgentBuilder] = useState(
     () =>
       (authScheme || envAuthScheme || "").toLowerCase() ===
       AGENT_BUILDER_AUTH_SCHEME,
@@ -252,40 +250,6 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
               />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="apiKey">LangSmith API Key</Label>
-              <p className="text-muted-foreground text-sm">
-                This is <strong>NOT</strong> required if using a local LangGraph
-                server. This value is stored in your browser's local storage and
-                is only used to authenticate requests sent to your LangGraph
-                server.
-              </p>
-              <PasswordInput
-                id="apiKey"
-                name="apiKey"
-                defaultValue={apiKey ?? ""}
-                className="bg-background"
-                placeholder="lsv2_pt_..."
-              />
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="agentBuilderEnabled">
-                    Built with Agent Builder
-                  </Label>
-                  <p className="text-muted-foreground text-sm">
-                    Enable this for Agent Builder deployments.
-                  </p>
-                </div>
-                <Switch
-                  id="agentBuilderEnabled"
-                  checked={isAgentBuilder}
-                  onCheckedChange={setIsAgentBuilder}
-                />
-              </div>
-            </div>
 
             <div className="mt-2 flex justify-end">
               <Button

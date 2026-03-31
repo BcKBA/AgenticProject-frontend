@@ -45,6 +45,7 @@ import {
   ArtifactTitle,
   useArtifactContext,
 } from "./artifact";
+import { AgentSelector, AgentBadge, AGENTS } from "./agent-selector";
 
 function StickyToBottomContent(props: {
   content: ReactNode;
@@ -116,6 +117,9 @@ export function Thread() {
   const [artifactOpen, closeArtifact] = useArtifactOpen();
 
   const [threadId, _setThreadId] = useQueryState("threadId");
+  const [selectedAgent, setSelectedAgent] = useQueryState("assistantId", {
+    defaultValue: process.env.NEXT_PUBLIC_ASSISTANT_ID ?? AGENTS[0].id,
+  });
   const [chatHistoryOpen, setChatHistoryOpen] = useQueryState(
     "chatHistoryOpen",
     parseAsBoolean.withDefault(false),
@@ -371,6 +375,7 @@ export function Thread() {
               </div>
 
               <div className="flex items-center gap-4">
+                <AgentBadge agentId={selectedAgent} />
                 <div className="flex items-center">
                   <OpenGitHubRepo />
                 </div>
@@ -435,11 +440,20 @@ export function Thread() {
               footer={
                 <div className="sticky bottom-0 flex flex-col items-center gap-8 bg-white">
                   {!chatStarted && (
-                    <div className="flex items-center gap-3">
-                      <LangGraphLogoSVG className="h-8 flex-shrink-0" />
-                      <h1 className="text-2xl font-semibold tracking-tight">
-                        Agent Chat
-                      </h1>
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="flex items-center gap-3">
+                        <LangGraphLogoSVG className="h-8 flex-shrink-0" />
+                        <h1 className="text-2xl font-semibold tracking-tight">
+                          Agent Chat
+                        </h1>
+                      </div>
+                      <AgentSelector
+                        value={selectedAgent as (typeof AGENTS)[number]["id"]}
+                        onChange={(id) => {
+                          setSelectedAgent(id);
+                          setThreadId(null);
+                        }}
+                      />
                     </div>
                   )}
 
